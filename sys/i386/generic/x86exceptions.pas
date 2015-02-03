@@ -54,14 +54,14 @@ begin
 	for i := 0 to 7 do write(pbyte(TContext(ctx).eip)[i],' '); writeln;
 	
 	writeln('Code: ', TContext(ctx).errorcode);
-	writeln('EFLAGS: ', TContext(ctx).eflags);
+	writeln('EFLAGS: ', hexStr(TContext(ctx).eflags,8));
 	writeln('ESP: ', TContext(ctx).ESP,'(',TContext(ctx).UserESP,')');
-	writeln('CS: ', hexStr(TContext(ctx).CS,8));
-	writeln('DS: ', hexStr(TContext(ctx).DS,8));
-	writeln('ES: ', hexStr(TContext(ctx).ES,8));
-	writeln('FS: ', hexStr(TContext(ctx).FS,8));
-	writeln('GS: ', hexStr(TContext(ctx).GS,8));
-	writeln('SS: ', hexStr(TContext(ctx).SS,8));
+	writeln('CS: ', hexStr(TContext(ctx).CS and $FFFF,8));
+	writeln('DS: ', hexStr(TContext(ctx).DS and $FFFF,8));
+	writeln('ES: ', hexStr(TContext(ctx).ES and $FFFF,8));
+	writeln('FS: ', hexStr(TContext(ctx).FS and $FFFF,8));
+	writeln('GS: ', hexStr(TContext(ctx).GS and $FFFF,8));
+	writeln('SS: ', hexStr(TContext(ctx).SS and $FFFF,8));
 
   ExceptionManager.HandleException(self, Ctx, CtxSize, done);
 end;

@@ -307,8 +307,8 @@ procedure TInterruptTable.RemoveHandler(Handler: TInterruptHandler);
           begin
             if p.Next = handler then
               begin
-              p.Next := handler.Next;
-              break;
+                p.Next := handler.Next;
+                break;
               end;
             p := p.Next;
           end;

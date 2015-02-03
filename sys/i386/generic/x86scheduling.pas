@@ -57,7 +57,7 @@ procedure Tx86SchedulerManager.OnScheduling(var Ctx; CtxSize: PtrInt; var done: 
   begin
     if GetCurrentScheduler.Schedule(ctx, ctxsize, ts) then
       begin
-        writeln(TContext(ctx).gs, ' - ', TContext(ctx).fs, ' - ', TContext(ctx).es, ' - ', TContext(ctx).ds);
+        //writeln(TContext(ctx).gs, ' - ', TContext(ctx).fs, ' - ', TContext(ctx).es, ' - ', TContext(ctx).ds);
         if ts then
           SetTS();
       end;

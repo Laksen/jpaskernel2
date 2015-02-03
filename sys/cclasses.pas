@@ -2,6 +2,8 @@ unit cclasses;
 
 interface
 
+uses heapmgr;
+
 type
  generic TGDictionary<TKey, TValue> = class
  private

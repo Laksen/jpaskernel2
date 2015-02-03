@@ -76,6 +76,7 @@ begin
    if fHandle = InvalidHandle then
       fHandle := InterlockedIncrement(HandleCounter);
    HandleList.Add(fHandle, self);
+   //fHandle := ptruint(self);
 end;
 
 destructor TKernelObject.Destroy;
@@ -138,6 +139,8 @@ begin
 	
 	if not result.CanAccess then
 		raise Exception.Create('Insufficient access rights');
+
+  //result:=TKernelObject(handle);
 end;
 
 procedure CloseHandle(Handle: THandle);

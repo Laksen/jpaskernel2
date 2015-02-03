@@ -8,14 +8,13 @@ type
 
   TKernelEvent = class
   private
-    fEvent: PChar;
+    fEvent: ansistring;
     fLevel: TEventLevel;
     fSubsystem: TSubsystem;
   public
-    constructor Create(AEvent: PChar; SubSystem: TSubSystem; Level: TEventLevel);
-    destructor Destroy; override;
+    constructor Create(const AEvent: ansistring; SubSystem: TSubSystem; Level: TEventLevel);
 
-    property Event: PChar read fEvent;
+    property Event: ansistring read fEvent;
     property Subsystem: TSubsystem read fSubsystem;
     property Level: TEventLevel read fLevel;
   end;
@@ -37,11 +36,11 @@ type
     procedure RaiseEvent(Event: TKernelEvent); override;
   end;
 
-procedure LogDebug(Event: PChar; Subsystem: TSubsystem);
-procedure LogInfo(Event: PChar; Subsystem: TSubsystem);
-procedure LogWarning(Event: PChar; Subsystem: TSubsystem);
-procedure LogError(Event: PChar; Subsystem: TSubsystem);
-procedure LogFatal(Event: PChar; Subsystem: TSubsystem);
+procedure LogDebug(const Event: ansistring; Subsystem: TSubsystem);
+procedure LogInfo(const Event: ansistring; Subsystem: TSubsystem);
+procedure LogWarning(const Event: ansistring; Subsystem: TSubsystem);
+procedure LogError(const Event: ansistring; Subsystem: TSubsystem);
+procedure LogFatal(const Event: ansistring; Subsystem: TSubsystem);
 
 var
   KernelEvents: TKernelEventManager;
@@ -50,29 +49,35 @@ implementation
 
 uses cclasses, heapmgr;
 
-procedure LogDebug(Event: PChar; Subsystem: TSubsystem);
+procedure Log(Event: TKernelEvent); inline;
   begin
-    KernelEvents.Log(TKernelEvent.Create(Event, subsystem, evDebug));
+    if assigned(KernelEvents) then
+      KernelEvents.Log(Event);
   end;
 
-procedure LogInfo(Event: PChar; Subsystem: TSubsystem);
+procedure LogDebug(const Event: ansistring; Subsystem: TSubsystem);
   begin
-    KernelEvents.Log(TKernelEvent.Create(Event, subsystem, evInfo));
+    Log(TKernelEvent.Create(Event, subsystem, evDebug));
   end;
 
-procedure LogWarning(Event: PChar; Subsystem: TSubsystem);
+procedure LogInfo(const Event: ansistring; Subsystem: TSubsystem);
   begin
-    KernelEvents.Log(TKernelEvent.Create(Event, subsystem, evWarning));
+    Log(TKernelEvent.Create(Event, subsystem, evInfo));
   end;
 
-procedure LogError(Event: PChar; Subsystem: TSubsystem);
+procedure LogWarning(const Event: ansistring; Subsystem: TSubsystem);
   begin
-    KernelEvents.Log(TKernelEvent.Create(Event, subsystem, evError));
+    Log(TKernelEvent.Create(Event, subsystem, evWarning));
   end;
 
-procedure LogFatal(Event: PChar; Subsystem: TSubsystem);
+procedure LogError(const Event: ansistring; Subsystem: TSubsystem);
   begin
-    KernelEvents.Log(TKernelEvent.Create(Event, subsystem, evFatal));
+    Log(TKernelEvent.Create(Event, subsystem, evError));
+  end;
+
+procedure LogFatal(const Event: ansistring; Subsystem: TSubsystem);
+  begin
+    Log(TKernelEvent.Create(Event, subsystem, evFatal));
   end;
 
 procedure TKernelEventManager.Log(Event: TKernelEvent);
@@ -97,18 +102,12 @@ procedure TKernelOutput.RaiseEvent(Event: TKernelEvent);
     writeln(EventStr[Event.Level], Event.Event);
   end;
 
-constructor TKernelEvent.Create(AEvent: PChar; SubSystem: TSubSystem; Level: TEventLevel);
+constructor TKernelEvent.Create(const AEvent: ansistring; SubSystem: TSubSystem; Level: TEventLevel);
   begin
     inherited Create;
-    fEvent := StrDup(AEvent);
+    fEvent := AEvent;
     fSubSystem := SubSystem;
     fLevel := Level;
-  end;
-
-destructor TKernelEvent.Destroy;
-  begin
-    StrDispose(fEvent);
-    inherited Destroy;
   end;
 
 initialization

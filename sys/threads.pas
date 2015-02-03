@@ -12,7 +12,7 @@ type
     fOwner: TObject;
     fTLS: TTLS;
   public
-    procedure SetContext(const Ctx; CtxSize: PtrInt);
+    procedure SetContext(constref Ctx; CtxSize: PtrInt);
     procedure GetContext(var Ctx; CtxSize: PtrInt);
 
     constructor Create(Owner: TObject; StackSize: PtrInt);
@@ -49,10 +49,11 @@ function GetThreadID: PtrInt;
       Result := InvalidHandle;
   end;
 
-procedure TThread.SetContext(const Ctx; CtxSize: PtrInt);
+procedure TThread.SetContext(constref Ctx; CtxSize: PtrInt);
   begin
     if not assigned(fContext) then
       fContext := GetMem(CtxSize);
+
     move(Ctx, pbyte(fContext)^, CtxSize);
   end;
 

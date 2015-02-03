@@ -4,27 +4,40 @@ uses
   sysutils,
   applications, modules, debugger, hal, machine, exceptions, services,
   machineimpl,
+  devicetypes,videodev,
   handles, vfs,
   schedulers, schedulerRR, threads, process,
   bochsgfx;
 
+var
+  p: TProcess;
+  b: TBochsGFX;
+  dev: TVideoDevice;
+
 procedure test;
 begin
-  writeln('test');
-  while true do;
+  while true do
+    dev.AccelIntf.DrawLine(dev.AccelIntf.GetScreenSurface, random(400-20)+10, random(280)+10, random(400-20)+10, random(280)+10, random(255), random(255), 0);
 end;
 
 procedure test2;
 begin
-  writeln('test2');
-  while true do;
+  while true do
+    dev.AccelIntf.DrawLine(dev.AccelIntf.GetScreenSurface, random(400-20)+410, random(280)+310, random(400-20)+410, random(280)+310, random(255), 0, random(255));
 end;
 
-var
-  t: TThread;
-  ctxsize: PtrInt;
-  ctx: Pointer;
-  p: TProcess;
+procedure test3;
+begin
+  while true do
+    dev.AccelIntf.DrawLine(dev.AccelIntf.GetScreenSurface, random(400-20)+10, random(280)+310, random(400-20)+10, random(280)+310, 0, random(255), random(255));
+end;
+
+procedure test4;
+begin
+  while true do
+    dev.AccelIntf.DrawLine(dev.AccelIntf.GetScreenSurface, random(400-20)+410, random(280)+10, random(400-20)+410, random(280)+10, random(128), random(255), random(128));
+end;
+
 begin
   LogInfo('Initializing machine', ssKernel);
 	MachineImpl.InitializeSpecifics;
@@ -34,23 +47,17 @@ begin
 
 	LogInfo('Kernel booted', ssKernel);
 
-	//LogInfo('Installing bochs gfx adapter', ssKernel);
-	//DevManager.AddDevice(TBochsGFX.Create.DeviceDescriptor);
-
-	{try
-		TApplication.Create('boot:test');
-	except
-		on e: exception do
-			LogError(pchar(e.message), ssKernel);
-  end;}
+  b:=TBochsGFX.Create;
+  dev:=TVideoDevice(GetDeviceImplementation(b.DeviceDescriptor));
+  dev.SetMode(0);
 
   p:=TProcess.Create;
   p.BeginThread(@test,nil);
   p.BeginThread(@test2,nil);
+  p.BeginThread(@test3,nil);
+  p.BeginThread(@test4,nil);
 
-	LogDebug('Enabling interrupts', ssKernel);
 	Mach.EnableInterrupts;
-	LogInfo('Done', ssKernel);
 
   while true do;
 end.

@@ -40,7 +40,6 @@
       <Unit1>
         <Filename Value="i386\generic\vgaoutput.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="vgaoutput"/>
       </Unit1>
     </Units>
   </ProjectOptions>
@@ -56,11 +55,10 @@
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>
-      <HeapSize Value="65536"/>
       <TargetCPU Value="i386"/>
       <TargetOS Value="embedded"/>
       <Optimizations>
-        <OptimizationLevel Value="3"/>
+        <OptimizationLevel Value="2"/>
       </Optimizations>
     </CodeGeneration>
     <Linking>
